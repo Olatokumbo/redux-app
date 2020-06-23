@@ -10,7 +10,7 @@ const Counter = (props) =>{
 
 const mapStateToProps = (state) =>{
     return{
-        counter: state.counter
+        counter: state.ctr.counter
     }
 };
 export default connect(mapStateToProps)(Counter);

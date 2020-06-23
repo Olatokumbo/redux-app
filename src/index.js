@@ -1,9 +1,27 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import reducer from "./store/reducer";
-import {createStore} from "redux";
+import counterReducer from "./store/reducers/counter";
+import resultsReducer from "./store/reducers/result";
+import {createStore, combineReducers, applyMiddleware} from "redux";
+import thunk from "redux-thunk";
 import {Provider} from "react-redux";
-const store=createStore(reducer);
+const rootReducer = combineReducers({
+    ctr: counterReducer,
+    res: resultsReducer
+}
+);
+
+const logger  = store =>{
+    return next =>{
+        return action =>{
+            console.log("Middleware is Dispatching", action);
+            let result = next(action);
+            console.log("Middleware next State", store.getState());
+            return result
+        }
+    }
+}
+const store=createStore(rootReducer, applyMiddleware(logger, thunk));
 
 ReactDOM.render(<Provider store = {store}><App/></Provider>, document.getElementById("root"));
